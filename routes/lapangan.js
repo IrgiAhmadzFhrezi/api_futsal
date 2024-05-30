@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const lapanganController = require("../controllers/lapanganController");
 const uploadConfig = require("../uploadConfig");
-
 const fields = uploadConfig.upload.fields([
   {
     name: "gambar",
@@ -10,9 +9,8 @@ const fields = uploadConfig.upload.fields([
 ]);
 
 router.post("/create", fields, (req, res) => {
-  if (req.files && req.files.gambar) {
-    req.body.gambar = req.files.gambar[0].filename;
-  }
+  req.body.gambar = req.files.gambar[0].filename;
+  // console.log(req.body)
   lapanganController
     .create(req.body)
     .then((result) => res.json(result))
@@ -27,6 +25,7 @@ router.put("/edit/:id", fields, (req, res) => {
   } else {
     delete data.gambar;
   }
+  console.log(data);
   lapanganController
     .edit(req.params.id, data)
     .then((result) => res.json(result))
@@ -41,6 +40,7 @@ router.get("/getall", (req, res) => {
 });
 
 router.get("/getbyid/:id", (req, res) => {
+  console.log(req.params.id);
   lapanganController
     .getById(req.params.id)
     .then((result) => res.json(result))
