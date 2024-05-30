@@ -5,7 +5,7 @@ const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "static"); // Menghapus spasi yang tidak perlu
+    cb(null, "/static/"); // Menghapus spasi yang tidak perlu
   },
   filename: (req, file, cb) => {
     cb(
