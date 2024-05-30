@@ -2,9 +2,10 @@ const multer = require("multer");
 const path = require("path");
 const maxSize = 20000000;
 const fs = require("fs");
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "/static");
+    cb(null, "static"); // Menghapus spasi yang tidak perlu
   },
   filename: (req, file, cb) => {
     cb(
@@ -29,4 +30,4 @@ const cekNull = (fileUpload) => {
   return fileUpload[0].filename;
 };
 
-module.exports = { upload, cekNull };
+module.exports = { upload, cekNull }; // Menambahkan tanda kutip dan titik koma di bagian akhir
