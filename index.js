@@ -4,8 +4,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 const dotenv = require("dotenv");
+const multer = require("multer");
 
-dotenv.config(); // Memuat variabel lingkungan dari file .env
+dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 const mongoUrl = process.env.MONGO_URI;
@@ -21,7 +22,7 @@ const connectDB = async () => {
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(error);
-    process.exit(1); // Keluar dari proses dengan kegagalan
+    process.exit(1);
   }
 };
 
@@ -32,12 +33,29 @@ app.use(cors());
 const directory = path.join(__dirname, "/static/");
 app.use(express.static(directory));
 
-// Mengimpor rute
+// Multer Configuration
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./static/"); // Penyimpanan di dalam folder 'uploads'
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); // Nama file akan tetap sama dengan yang diunggah
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// Routes
 app.use("/user", require("./routes/user"));
 app.use("/lapangan", require("./routes/lapangan"));
 app.use("/transaksi", require("./routes/transaksi"));
 
-// Memulai server hanya setelah koneksi ke database terhubung
+// Upload endpoint
+app.post("/upload", upload.single("image"), (req, res) => {
+  res.json({ message: "Gambar berhasil diunggah" });
+});
+
+// Start server after database connection
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Server berjalan pada port ${PORT}`);
