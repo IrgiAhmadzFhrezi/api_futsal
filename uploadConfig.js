@@ -6,7 +6,7 @@ const fs = require("fs");
 // Konfigurasi penyimpanan multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./static");
+    cb(null, "static"); // Hilangkan spasi ekstra di sini
   },
   filename: (req, file, cb) => {
     cb(
@@ -22,11 +22,29 @@ const upload = multer({
   limits: {
     fileSize: maxSize,
   },
+  fileFilter: (req, file, cb) => {
+    // Validasi jenis file, misalnya hanya menerima file gambar
+    const filetypes = /jpeg|jpg|png|gif/;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(
+        new Error(
+          "Error: File harus berupa gambar dengan format jpeg, jpg, png, atau gif"
+        )
+      );
+    }
+  },
 });
 
 // Fungsi untuk mengecek null
 const cekNull = (fileUpload) => {
-  if (fileUpload === undefined || fileUpload === null) {
+  if (!fileUpload || fileUpload.length === 0) {
     return null;
   }
   return fileUpload[0].filename;
