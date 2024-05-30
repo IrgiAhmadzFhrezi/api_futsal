@@ -1,8 +1,9 @@
 const multer = require("multer");
 const path = require("path");
-const maxSize = 20000000;
+const maxSize = 20000000; // 20 MB
 const fs = require("fs");
 
+// Konfigurasi penyimpanan multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./static");
@@ -23,6 +24,7 @@ const upload = multer({
   },
 });
 
+// Fungsi untuk mengecek null
 const cekNull = (fileUpload) => {
   if (fileUpload === undefined || fileUpload === null) {
     return null;
