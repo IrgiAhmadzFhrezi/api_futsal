@@ -5,7 +5,6 @@ const cors = require("cors");
 const path = require("path");
 const dotenv = require("dotenv");
 const multer = require("multer");
-const { upload } = require("./uploadconfig");
 
 dotenv.config(); // Memuat variabel lingkungan dari file .env
 
@@ -26,26 +25,6 @@ const connectDB = async () => {
     process.exit(1); // Keluar dari proses dengan kegagalan
   }
 };
-
-router.post("/static", upload.single("gambar"), async (req, res) => {
-  try {
-    const data = {
-      kategori: req.body.kategori,
-      nama: req.body.nama,
-      tipe: req.body.tipe,
-      harga: req.body.harga,
-      gambar: req.file.filename,
-    };
-    const result = await lapanganController.create(data);
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({
-      sukses: false,
-      msg: "Gagal mengunggah gambar",
-      error: error.message,
-    });
-  }
-});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
