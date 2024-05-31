@@ -5,7 +5,11 @@ const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "/static/"); // Menghapus spasi yang tidak perlu
+    const dir = path.join(__dirname, "static");
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    cb(null, dir);
   },
   filename: (req, file, cb) => {
     cb(
@@ -18,9 +22,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: {
-    fileSize: maxSize,
-  },
+  limits: { fileSize: maxSize },
 });
 
 const cekNull = (fileUpload) => {
