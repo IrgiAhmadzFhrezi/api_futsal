@@ -3,16 +3,16 @@ const path = require("path");
 const maxSize = 20000000;
 const fs = require("fs");
 
+// Tentukan path ke folder static berdasarkan lokasi file uploadConfig.js
+const staticPath = path.join(__dirname, "..", "static");
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "/static/"); // Menghapus spasi yang tidak perlu
+    cb(null, staticPath); // Gunakan path yang benar untuk folder static
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      new Date().toISOString().replace(/:/g, "-") +
-        path.extname(file.originalname)
-    );
+    const uniqueSuffix = new Date().toISOString().replace(/:/g, "-");
+    cb(null, uniqueSuffix + path.extname(file.originalname));
   },
 });
 
@@ -24,10 +24,10 @@ const upload = multer({
 });
 
 const cekNull = (fileUpload) => {
-  if (fileUpload === undefined || fileUpload === null) {
+  if (!fileUpload || !Array.isArray(fileUpload) || fileUpload.length === 0) {
     return null;
   }
   return fileUpload[0].filename;
 };
 
-module.exports = { upload, cekNull }; // Menambahkan tanda kutip dan titik koma di bagian akhir
+module.exports = { upload, cekNull };
