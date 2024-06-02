@@ -4,7 +4,7 @@ const maxSize = 20000000;
 const fs = require("fs");
 
 // Tentukan path ke folder static berdasarkan lokasi file uploadConfig.js
-const staticPath = path.join(__dirname, "..", "static");
+const staticPath = path.join(__dirname, "/static");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
