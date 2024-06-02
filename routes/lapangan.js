@@ -1,21 +1,23 @@
 const router = require("express").Router();
 const lapanganController = require("../controllers/lapanganController");
-const uploadConfig = require("../uploadConfig");
-const fields = uploadConfig.upload.fields([
-  {
-    name: "gambar",
-    maxCount: 1,
-  },
-]);
+const multer = require('multer')
 
-router.post("/create", fields, (req, res) => {
-  req.body.gambar = req.files.gambar[0].filename;
-  // console.log(req.body)
-  lapanganController
-    .create(req.body)
-    .then((result) => res.json(result))
-    .catch((err) => res.json(err));
-});
+const gambar = multer.diskStorage({
+    filename: async function (req, file, cb) {
+        let ext = file.originalname.substring(
+            file.originalname.lastIndexOf("."),
+            file.originalname.length
+        )
+        cb(null, Date.now() + ext)
+    },
+    destination: async function (req, file, cb) {
+        cb(null, './static/')
+    }
+})
+
+const uploadImg = multer({ storage: gambar }).single("gambar")
+
+router.post('/create', uploadImg, controller.create)
 
 router.put("/edit/:id", fields, (req, res) => {
   const gambar = uploadConfig.cekNull(req.files.gambar);
