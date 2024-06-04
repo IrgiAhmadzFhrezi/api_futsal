@@ -9,12 +9,26 @@ const fields = uploadConfig.upload.fields([
 ]);
 
 router.post("/create", fields, (req, res) => {
-  req.body.gambar = req.files.gambar[0].filename;
-  // console.log(req.body)
-  lapanganController
-    .create(req.body)
-    .then((result) => res.json(result))
-    .catch((err) => res.json(err));
+  if (req.body.gambar) {
+    req.body.gambar = req.files.gambar[0].filename;
+    // console.log(req.body)
+    lapanganController
+      .create(req.body)
+      .then((result) => res.json(result))
+      .catch((err) => res.json(err));
+  } else {
+    // console.log(req.body)
+    lapanganController
+      .create(req.body)
+      .then((result) => res.json(result))
+      .catch((err) => res.json(err));
+  }
+
+  // // console.log(req.body)
+  // lapanganController
+  //   .create(req.body)
+  //   .then((result) => res.json(result))
+  //   .catch((err) => res.json(err));
 });
 
 router.put("/edit/:id", fields, (req, res) => {
